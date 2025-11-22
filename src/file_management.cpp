@@ -16,7 +16,7 @@ namespace pros {
                  * Writes data onto the SD card and saves it every timer triggers
                  */
                 void save(){
-                    FILE*SD = fopen(address, "w");
+                    FILE*SD = fopen(address, "a");
                     fwrite(&data, sizeof(data), sizeof(data), SD);
                     fclose(SD);
                     data = "";

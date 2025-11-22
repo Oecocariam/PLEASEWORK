@@ -35,7 +35,7 @@ void initialize() {
 	while(true){
 
 		char fileNamer[] = {'/','u','s','d','/','d','a','t','a', fileNumber,'.','t','x','t'};
-		FILE* SD = fopen("/usd/example.txt", "r");	
+		FILE* SD = fopen(fileNamer, "r");	
 
 		if(SD == NULL){
 			break;
@@ -106,8 +106,10 @@ void opcontrol() {
 
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
+		    (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
+		    (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
+
+		management.write(data);
 
 		// Arcade control scheme
 		int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
