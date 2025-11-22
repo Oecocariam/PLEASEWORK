@@ -27,7 +27,26 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
-	pros::File_management SD("test");
+
+	int fileNumber = 0;
+	
+	char fileNamer[1];
+
+	while(true){
+
+		char fileNamer[] = {'/','u','s','d','/','d','a','t','a', fileNumber,'.','t','x','t'};
+		FILE* SD = fopen("/usd/example.txt", "r");	
+
+		if(SD == NULL){
+			break;
+		}
+		
+		fclose(SD);
+
+		fileNumber += 1;
+	}
+
+	pros::File_management management(fileNamer, 20);
 
 }
 

@@ -7,7 +7,7 @@ namespace pros {
 
         private:
 
-            char address[10]; //keeps track of the address of the SD Card
+            char address[0]; //keeps track of the address of the SD Card
             std::string data; //holds the writing buffer
             int counter; //counts to one second before saving
             int timing; //how many triggers of the writing command before it will save
