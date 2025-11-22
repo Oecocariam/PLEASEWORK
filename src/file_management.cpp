@@ -43,7 +43,8 @@ namespace pros {
                     counter = 0;
                     timing = 1000/frequency;
 
-                }  
+                }
+                  
                 /**
                  * adds data to the class formatted as CSV
                  * 
