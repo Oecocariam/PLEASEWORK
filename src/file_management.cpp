@@ -1,5 +1,10 @@
 #include "main.h"
 #include "string.h"
+#include <cassert>
+#include <cstring>
+#include <iostream>
+#include <vector>
+
 namespace pros {
     inline namespace v5 {
 
@@ -37,16 +42,18 @@ namespace pros {
                     memcpy(&address, &iaddress, sizeof(iaddress));
                     counter = 0;
                     timing = 1000/frequency;
-                }
-                
+
+                }  
                 /**
                  * adds data to the class formatted as CSV
                  * 
                  * \param idata
                  *  an array of the data desired to be written
                  */
-                void write(std::string idata[]){
-                    for(int i = 0; i>=sizeof(idata)-1; i++){
+                template<size_t N>
+                void write(std::string (&idata)[N]){
+                    for(int i = 0; i>=std::size(idata); i++){
+
                         data += (idata[i] + ", ");
                     }
                     data += "\n";

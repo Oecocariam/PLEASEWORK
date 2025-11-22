@@ -102,7 +102,7 @@ void opcontrol() {
 	pros::MotorGroup right_mg({-4, 5, 6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 
 	pros::File_management management(fileNamer, 20);
-	std::string data[6]= {"Motor1","Motor2","Motor3","Motor4","Motor5","Motor6"};
+	std::string data[7]= {"time ms", "Motor1","Motor2","Motor3","Motor4","Motor5","Motor6"};
 
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
@@ -117,12 +117,12 @@ void opcontrol() {
 		left_mg.move(dir - turn);                      // Sets left motor voltage
 		right_mg.move(dir + turn);                     // Sets right motor voltage
 
-		data[0] = left_mg.get_voltage(0); 			   
-		data[1] = left_mg.get_voltage(1); 			   
-		data[2] = left_mg.get_voltage(2); 			   
-		data[3] = right_mg.get_voltage(0);			   
-		data[4] = right_mg.get_voltage(1);			   
-		data[5] = right_mg.get_voltage(2);			   
+		data[1] = left_mg.get_voltage(0); 			   
+		data[2] = left_mg.get_voltage(1); 			   
+		data[3] = left_mg.get_voltage(2); 			   
+		data[4] = right_mg.get_voltage(0);			   
+		data[5] = right_mg.get_voltage(1);			   
+		data[6] = right_mg.get_voltage(2);			   
 
 		management.write(data);						   // write data to class
 
