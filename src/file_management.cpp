@@ -52,17 +52,12 @@ namespace pros {
                  */
                 template<size_t N>
                 void write(std::string (&idata)[N]){
-                    for(int i = 0; i>=std::size(idata); i++){
-
-                        data += (idata[i] + ", ");
-                    }
-                    data += "\n";
-                    if(counter>=timing){
-                        save();
-                    }
+                    for(std::string i : idata){
+                        data += (i + ", ");
+                    };
+                        data += "\n";
                 }
-
-        
+                        
 
         };
     }
