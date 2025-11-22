@@ -16,6 +16,10 @@ void on_center_button() {
 	}
 }
 
+	int fileNumber = 0;
+	
+	char fileNamer[1];
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -27,10 +31,6 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
-
-	int fileNumber = 0;
-	
-	char fileNamer[1];
 
 	while(true){
 
@@ -46,7 +46,9 @@ void initialize() {
 		fileNumber += 1;
 	}
 
-	pros::File_management management(fileNamer, 20);
+	
+
+	
 
 }
 
@@ -99,6 +101,8 @@ void opcontrol() {
 	pros::MotorGroup left_mg({-1, 2, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({-4, 5, 6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 
+	pros::File_management management(fileNamer, 20);
+	std::string data[6]= {"Motor1","Motor2","Motor3","Motor4","Motor5","Motor6"};
 
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
@@ -110,6 +114,16 @@ void opcontrol() {
 		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
 		left_mg.move(dir - turn);                      // Sets left motor voltage
 		right_mg.move(dir + turn);                     // Sets right motor voltage
+
+		data[0] = left_mg.get_voltage(0); 			   
+		data[1] = left_mg.get_voltage(1); 			   
+		data[2] = left_mg.get_voltage(2); 			   
+		data[3] = right_mg.get_voltage(0);			   
+		data[4] = right_mg.get_voltage(1);			   
+		data[5] = right_mg.get_voltage(2);			   
+
+		management.write(data);						   // write data to class
+
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }
