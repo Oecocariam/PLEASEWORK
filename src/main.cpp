@@ -1,5 +1,6 @@
 #include "main.h"
 #include "file_management.cpp"
+#include "block_elevator.cpp"
 /**
  * A callback function for LLEMU's center button.
  *
@@ -100,9 +101,11 @@ void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	pros::MotorGroup left_mg({-1, 2, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({-4, 5, 6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
+	pros::Motor shrimp(std::int8_t(13), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 
+	pros::Block_Elevator stimpy(&shrimp,55,12);
 	pros::File_management management(fileNamer, 20);
-	std::string data[7]= {"Time ms", "Motor1","Motor2","Motor3","Motor4","Motor5","Motor6"};
+	std::string data[8]= {"Time ms", "Motor1","Motor2","Motor3","Motor4","Motor5","Motor6", "Shrimp"};
 
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
@@ -123,7 +126,14 @@ void opcontrol() {
 		data[3] = left_mg.get_voltage(2); 			   
 		data[4] = right_mg.get_voltage(0);			   
 		data[5] = right_mg.get_voltage(1);			   
-		data[6] = right_mg.get_voltage(2);			   
+		data[6] = right_mg.get_voltage(2);
+		data[6] = shrimp.get_voltage();			   
+
+		if(master.get_digital_new_press(DIGITAL_A)){
+
+			stimpy.chainMove(7, 127);
+
+		}
 
 		management.write(data);						   // write data to class
 

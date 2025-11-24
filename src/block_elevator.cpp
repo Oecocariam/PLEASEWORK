@@ -36,7 +36,7 @@ namespace pros {
                     
                     ptr = ielevevator;
                     chainlength = ichainLength;
-                    enocderUnitsPerChain = 900/12;
+                    enocderUnitsPerChain = 900/sprocketCount;
 
                     for(int i = 0; i>=7; i++){
                         chainPositioning[i] = i*(chainlength/7);
