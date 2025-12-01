@@ -9,7 +9,7 @@ namespace pros {
 
                 pros::Motor elevatorMotor;
                 std::string jimmy;
-                pros::Motor* ptr = &(pros::Motor)elevatorMotor;
+                pros::Motor* ptr;
                 int chainlength;
                 int enocderUnitsPerChain;
                 int blockState[3];
