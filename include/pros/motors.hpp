@@ -71,10 +71,10 @@ class Motor : public AbstractMotor, public Device {
 	 * \endcode
 	 *
 	 */
-	Motor(const std::int8_t port, const pros::v5::MotorGears gearset = pros::v5::MotorGears::invalid,
+	Motor(const std::int8_t port = 1, const pros::v5::MotorGears gearset = pros::v5::MotorGears::invalid,
 	      const pros::v5::MotorUnits encoder_units = pros::v5::MotorUnits::invalid);
 
-	Motor();
+
 
 		/**
 	 * Constructs a new Motor object.
