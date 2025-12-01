@@ -111,15 +111,15 @@ void opcontrol() {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		    (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
 		    (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
-
+		/** 
 		management.write(data);
-
+*/
 		// Arcade control scheme
 		int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
 		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
 		left_mg.move(dir - turn);                      // Sets left motor voltage
 		right_mg.move(dir + turn);                     // Sets right motor voltage
-
+/** 
 		data[0] = pros::millis();
 		data[1] = left_mg.get_voltage(0); 			   
 		data[2] = left_mg.get_voltage(1); 			   
@@ -128,15 +128,15 @@ void opcontrol() {
 		data[5] = right_mg.get_voltage(1);			   
 		data[6] = right_mg.get_voltage(2);
 		data[6] = shrimp.get_voltage();			   
-
+*/
 		if(master.get_digital_new_press(DIGITAL_A)){
 
 			stimpy.chainMove(7, 127);
 
 		}
-
+/** 
 		management.write(data);						   // write data to class
-
+*/
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }
