@@ -154,6 +154,12 @@ class Motor : public AbstractMotor, public Device {
 	 */
 	std::int32_t move(std::int32_t voltage) const;
 
+	void setEqual(pros::Motor replace){
+		_port = replace._port;
+		this->set_gearing(replace.get_gearing());
+		this->set_encoder_units(replace.get_encoder_units());
+	};
+
 	/**
 	 * Sets the target absolute position for the motor to move to.
 	 *

@@ -107,7 +107,7 @@ void opcontrol() {
 	pros::MotorGroup right_mg({-4, 5, 6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor shrimp(std::int8_t(13), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 
-	pros::Block_Elevator stimpy(&shrimp,55,12);
+	pros::Block_Elevator stimpy(shrimp,55,12);
 	pros::File_management management(fileNamer, 20);
 	std::string data[8]= {"Time ms", "Motor1","Motor2","Motor3","Motor4","Motor5","Motor6", "Shrimp"};
 

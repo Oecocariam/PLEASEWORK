@@ -32,10 +32,10 @@ namespace pros {
                  *  the number of teeth on the sprocket powered by the motor
                  * 
                 */
-                Block_Elevator(pros::Motor* ielevevator, int ichainLength, int sprocketCount){
+                Block_Elevator(pros::Motor ielevevator, int ichainLength, int sprocketCount){
                     
                     
-                    ptr = ielevevator;
+                    elevatorMotor.setEqual(ielevevator);
                     chainlength = ichainLength;
                     enocderUnitsPerChain = 900/sprocketCount;
 
