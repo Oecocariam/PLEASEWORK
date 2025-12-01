@@ -39,7 +39,7 @@ namespace pros {
                 *   enter the loop delay in msec for saves once a second
                 */
                 File_management(char iaddress[], int frequency){
-                    memcpy(&address, &iaddress, sizeof(iaddress));
+                    memcpy(&address, &iaddress, sizeof(&iaddress));
                     counter = 0;
                     timing = 1000/frequency;
 
