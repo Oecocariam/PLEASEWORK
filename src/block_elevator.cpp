@@ -36,7 +36,7 @@ namespace pros {
                     
                     ptr = ielevevator;
                     chainlength = ichainLength;
-                    enocderUnitsPerChain = 900/sprocketCount;
+                    enocderUnitsPerChain = 900/12;
 
                     for(int i = 0; i>=7; i++){
                         chainPositioning[i] = i*(chainlength/7);
@@ -86,15 +86,24 @@ namespace pros {
                 /**
                  * holds a specifc tooth to the intake to prepare for loading
                  */
-                void hold_specific(int toothNuumber){
-
+                void hold_specific(int toothNumber){
+                     
                 }
 
                 /**
                  * loads the next blcok into the block elevator
                  */
                 void load(){
-                    
+/*
+                    int activeTooth = ;
+                    int nextTooth = activeTooth +1;
+
+                    if (activeTooth = 6){
+                        nextTooth = 0;
+                    }
+
+                    int toothDistance = chainPositioning[activeTooth]-chainPositioning[nextTooth];
+                    chainMove(toothDistance ,127); */
                 }
 
                 
