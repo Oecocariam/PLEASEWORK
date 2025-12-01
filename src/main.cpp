@@ -35,8 +35,12 @@ void initialize() {
 
 	while(true){
 
-		char fileNamer[] = {'/','u','s','d','/','d','a','t','a', fileNumber,'.','t','x','t'};
-		FILE* SD = fopen(fileNamer, "r");	
+		std::string fileNamer = "/usd/data" + std::to_string(fileNumber) + ".txt";
+
+		char * arrFileNamer = new char [fileNamer.length()+1];
+		strcpy (arrFileNamer, fileNamer.c_str());
+
+		FILE* SD = fopen(arrFileNamer, "r");	
 
 		if(SD == NULL){
 			break;

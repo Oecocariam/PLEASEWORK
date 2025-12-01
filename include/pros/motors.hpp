@@ -74,6 +74,8 @@ class Motor : public AbstractMotor, public Device {
 	Motor(const std::int8_t port, const pros::v5::MotorGears gearset = pros::v5::MotorGears::invalid,
 	      const pros::v5::MotorUnits encoder_units = pros::v5::MotorUnits::invalid);
 
+	Motor();
+
 		/**
 	 * Constructs a new Motor object.
 	 *
@@ -107,7 +109,6 @@ class Motor : public AbstractMotor, public Device {
 	 * \endcode
 	 *
 	 */
-	Motor();
 
 		/**
 	 * \addtogroup cpp-motors
@@ -115,6 +116,8 @@ class Motor : public AbstractMotor, public Device {
 	 */
 
 	Motor(const Device& device) : Motor(device.get_port()){};
+
+	
 
 	/// \name Motor movement functions
 	/// These functions allow programmers to make motors move
