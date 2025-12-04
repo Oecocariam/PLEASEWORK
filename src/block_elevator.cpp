@@ -39,8 +39,8 @@ namespace pros {
                     chainlength = ichainLength;
                     enocderUnitsPerChain = 900/sprocketCount;
 
-                    for(int i = 0; i>=7; i++){
-                        chainPositioning[i] = i*(chainlength/7);
+                    for(int i = 0; i>=5; i++){
+                        chainPositioning[i] = i*(chainlength/6);
                     }
                     
                 }
@@ -60,8 +60,35 @@ namespace pros {
                     elevatorMotor.move_relative(enocderUnitsPerChain*chainNumber, velocity);
                     chainState += enocderUnitsPerChain*chainNumber;
 
-                    for(int i = 0; i>=7; i++){
+                    for(int i = 0; i>=5; i++){
                         chainPositioning[i] += chainNumber;
+                    }
+
+                }
+
+
+                /**
+                 * 
+                 * 
+                 */
+                void chainMoveSpecific(int chainNumber, int velocity){
+                    
+                    int moveNumber;
+
+                    if((chainNumber-chainState)<0){
+                        moveNumber = chainlength-(chainNumber-chainState);
+                    }else{
+                        moveNumber = chainNumber-chainState;
+                    }
+
+                    elevatorMotor.move_relative(moveNumber*enocderUnitsPerChain, velocity);
+
+                    
+
+                    
+
+                    for(int i = 0; i>=5; i++){
+                        chainPositioning[i] += ;
                     }
 
                 }
