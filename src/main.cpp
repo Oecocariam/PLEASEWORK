@@ -137,7 +137,7 @@ void opcontrol() {
 
 		if(master.get_digital_new_press(DIGITAL_A)){
 
-			stimpy.chainMove(7, 127);
+			stimpy.chainMove(9, 127);
 
 		}
 

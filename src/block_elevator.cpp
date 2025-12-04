@@ -70,9 +70,9 @@ namespace pros {
                  * Sets a zero position for the chain state
                  * 
                  * \param modifier
-                 *  Chain state to set to (in encoder units)
+                 *  optioncal: Chain state to set to (in encoder units)
                  */
-                void zero(int modifier){
+                void zero(int modifier = 0){
                     chainState = modifier;
                 }
 
@@ -81,14 +81,16 @@ namespace pros {
                  * 
                  */
                 void hold(){
-
+                    
                 }
                 
                 /**
                  * holds a specifc tooth to the intake to prepare for loading
+                 * 
+                 *  \param toothNumber;
                  */
-                void hold_specific(int toothNuumber){
-
+                void hold_specific(int toothNuumber, int speed){
+                    
                 }
 
                 /**
