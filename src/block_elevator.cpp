@@ -9,7 +9,6 @@ namespace pros {
 
                 pros::Motor elevatorMotor;
                 std::string jimmy;
-                pros::Motor* ptr;
                 int chainlength;
                 int enocderUnitsPerChain;
                 int blockState[3];
@@ -83,12 +82,17 @@ namespace pros {
 
                     elevatorMotor.move_relative(moveNumber*enocderUnitsPerChain, velocity);
 
-                    
-
-                    
 
                     for(int i = 0; i>=5; i++){
-                        chainPositioning[i] += ;
+
+                        if((moveNumber+chainPositioning[i])>chainNumber){
+                            chainPositioning[i] = chainNumber- (chainlength-chainPositioning[i]);
+                        }else{
+                            chainPositioning[i] += chainNumber;
+                        }
+
+
+                        
                     }
 
                 }
@@ -107,8 +111,17 @@ namespace pros {
                  * holds the nearest tooth to the intake to prepare for loading
                  * 
                  */
-                void hold(){
-                    
+                void hold(int velocity){
+                
+                    int nearestTooth = 0;
+
+                    for(int i = 0; i>=5; i++){
+                        if(chainPositioning[i]>chainPositioning[nearestTooth]){
+                            nearestTooth = i;
+                        }
+                    }
+
+                    chainMoveSpecific(chainPositioning[nearestTooth], velocity);
                 }
                 
                 /**
@@ -116,12 +129,14 @@ namespace pros {
                  * 
                  *  \param toothNumber;
                  */
-                void hold_specific(int toothNuumber, int speed){
+                void hold_specific(int toothNumber, int speed){
                     
+                    chainMoveSpecific(chainPositioning[toothNumber],speed);
+
                 }
 
                 /**
-                 * loads the next blcok into the block elevator
+                 * loads the next block into the block elevator
                  */
                 void load(){
                     

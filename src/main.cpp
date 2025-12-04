@@ -19,7 +19,7 @@ void on_center_button() {
 
 	int fileNumber = 0;
 	
-	std::string fileNamer = "/usd/data.txt";
+	std::string fileNamer = "usd/data.txt";
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -32,17 +32,17 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
-/*
+
 	while(true){
 
-		std::string fileNamer = "/usd/data" + std::to_string(fileNumber) + ".txt";
+		std::string fileNamer = "usd/data" + std::to_string(fileNumber) + ".txt";
 
 		char * arrFileNamer = new char [fileNamer.length()+1];
 		strcpy (arrFileNamer, fileNamer.c_str());
 
 		FILE* SD = fopen(arrFileNamer, "r");	
 
-		if(SD == NULL){
+		if(SD == nullptr){
 			break;
 		}
 		
@@ -50,7 +50,7 @@ void initialize() {
 
 		fileNumber += 1;
 	}
-*/
+
 	
 
 	
@@ -134,7 +134,7 @@ void opcontrol() {
 
 		if(master.get_digital_new_press(DIGITAL_A)){
 
-			stimpy.chainMove(9, 127);
+			stimpy.hold(127);
 
 		}
 
