@@ -12,7 +12,7 @@ namespace pros {
 
             private:
 
-                char address[0]; //keeps track of the address of the SD Card
+                std::string address; //keeps track of the address of the SD Card
                 std::string data; //holds the writing buffer
                 int counter; //counts to one second before saving
                 int timing; //how many triggers of the writing command before it will save
@@ -21,7 +21,9 @@ namespace pros {
                  * Writes data onto the SD card and saves it every timer triggers
                  */
                 void save(){
-                    FILE*SD = fopen(address, "a");
+                    char * arrFileNamer = new char [address.length()+1];
+	                strcpy (arrFileNamer, address.c_str());	
+                    FILE*SD = fopen(arrFileNamer, "a");
                     fwrite(&data, sizeof(data), sizeof(data), SD);
                     fclose(SD);
                     data = "";
@@ -38,8 +40,8 @@ namespace pros {
                 * \param frequency
                 *   enter the loop delay in msec for saves once a second
                 */
-                File_management(char iaddress[], int frequency){
-                    memcpy(&address, &iaddress, sizeof(&iaddress));
+                File_management(std::string iaddress, int frequency){
+                    address = iaddress;
                     counter = 0;
                     timing = 1000/frequency;
 

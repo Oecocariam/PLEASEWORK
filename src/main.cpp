@@ -19,7 +19,7 @@ void on_center_button() {
 
 	int fileNumber = 0;
 	
-	char fileNamer[1];
+	std::string fileNamer = "/usd/data.txt";
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -32,7 +32,7 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
-
+/*
 	while(true){
 
 		std::string fileNamer = "/usd/data" + std::to_string(fileNumber) + ".txt";
@@ -50,7 +50,7 @@ void initialize() {
 
 		fileNumber += 1;
 	}
-
+*/
 	
 
 	
@@ -106,8 +106,10 @@ void opcontrol() {
 	pros::MotorGroup left_mg({-1, 2, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({-4, 5, 6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor shrimp(std::int8_t(13), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
+	pros::Motor krill(std::int8_t(-11), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 
 	pros::Block_Elevator stimpy(shrimp,55,12);
+
 	pros::File_management management(fileNamer, 20);
 	std::string data[8]= {"Time ms", "Motor1","Motor2","Motor3","Motor4","Motor5","Motor6", "Shrimp"};
 
@@ -137,6 +139,11 @@ void opcontrol() {
 
 			stimpy.chainMove(7, 127);
 
+		}
+
+		if(master.get_digital_new_press(DIGITAL_B)){
+
+			krill.move(127);
 		}
  
 		management.write(data);						   // write data to class
