@@ -106,7 +106,7 @@ void opcontrol() {
 	pros::MotorGroup left_mg({-1, 2, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({-4, 5, 6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor shrimp(std::int8_t(13), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
-	pros::Motor krill(std::int8_t(-11), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
+	pros::MotorGroup krill({-11,12}, pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 
 	pros::Block_Elevator stimpy(shrimp,55,12);
 
@@ -130,12 +130,15 @@ void opcontrol() {
 		data[4] = right_mg.get_voltage(0);			   
 		data[5] = right_mg.get_voltage(1);			   
 		data[6] = right_mg.get_voltage(2);
-		data[6] = shrimp.get_voltage();			   
+		data[7] = shrimp.get_voltage();			   
+
+		int state = stimpy.getChainState();
+
+		pros::lcd::set_text(2, std::to_string(state));
 
 		if(master.get_digital_new_press(DIGITAL_A)){
 
 			stimpy.hold(127);
-
 		}
 
 		if(master.get_digital_new_press(DIGITAL_B)){

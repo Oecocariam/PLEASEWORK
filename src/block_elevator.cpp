@@ -12,8 +12,8 @@ namespace pros {
                 int chainlength;
                 int enocderUnitsPerChain;
                 int blockState[3];
-                int chainPositioning[7];
-                int chainState = 0;
+                int chainPositioning[6];
+                int chainState = 9;
 
             public:
 
@@ -38,32 +38,18 @@ namespace pros {
                     chainlength = ichainLength;
                     enocderUnitsPerChain = 900/sprocketCount;
 
-                    for(int i = 0; i>=5; i++){
-                        chainPositioning[i] = i*(chainlength/6);
-                    }
+                    int chainState = 9;
+
+                    
+                    chainPositioning[0] = 9;
+                    chainPositioning[1] = 18;
+                    chainPositioning[2] = 27;
+                    chainPositioning[3] = 36;
+                    chainPositioning[4] = 45;
+                    chainPositioning[5] = 54;
                     
                 }
                 
-                /**
-                 * Moves the chain a number of chain lengths at the given velocity.
-                 * 
-                 * \param chainNumber
-                 *  Number of chains to move the drive. 
-                 * 
-                 * \param velocity
-                 *  Velocity of motor movement of chain
-                 * 
-                 */
-                void chainMove(int chainNumber, int velocity){
-                    
-                    elevatorMotor.move_relative(enocderUnitsPerChain*chainNumber, velocity);
-                    chainState += enocderUnitsPerChain*chainNumber;
-
-                    for(int i = 0; i>=5; i++){
-                        chainPositioning[i] += chainNumber;
-                    }
-
-                }
 
 
                 /**
@@ -75,26 +61,19 @@ namespace pros {
                     int moveNumber;
 
                     if((chainNumber-chainState)<0){
-                        moveNumber = chainlength-(chainNumber-chainState);
+                        moveNumber = chainlength+(chainNumber-chainState);
                     }else{
                         moveNumber = chainNumber-chainState;
                     }
 
-                    elevatorMotor.move_relative(moveNumber*enocderUnitsPerChain, velocity);
+                    elevatorMotor.move_relative(double(moveNumber*enocderUnitsPerChain), velocity);
 
+                    chainState = chainNumber;
 
-                    for(int i = 0; i>=5; i++){
+                }
 
-                        if((moveNumber+chainPositioning[i])>chainNumber){
-                            chainPositioning[i] = chainNumber- (chainlength-chainPositioning[i]);
-                        }else{
-                            chainPositioning[i] += chainNumber;
-                        }
-
-
-                        
-                    }
-
+                int getChainState(){
+                    return chainState;
                 }
 
                 /**
@@ -113,15 +92,12 @@ namespace pros {
                  */
                 void hold(int velocity){
                 
-                    int nearestTooth = 0;
-
-                    for(int i = 0; i>=5; i++){
-                        if(chainPositioning[i]>chainPositioning[nearestTooth]){
-                            nearestTooth = i;
-                        }
+                    int nearestTooth = (chainState/9)+1;
+                    if(nearestTooth >=7){
+                        nearestTooth = 1;
                     }
 
-                    chainMoveSpecific(chainPositioning[nearestTooth], velocity);
+                    chainMoveSpecific(chainPositioning[nearestTooth-1], velocity);
                 }
                 
                 /**
@@ -131,7 +107,7 @@ namespace pros {
                  */
                 void hold_specific(int toothNumber, int speed){
                     
-                    chainMoveSpecific(chainPositioning[toothNumber],speed);
+                    chainMoveSpecific(chainPositioning[toothNumber-1],speed);
 
                 }
 
