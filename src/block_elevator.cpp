@@ -9,12 +9,11 @@ namespace pros {
 
                 pros::Motor elevatorMotor;
                 std::string jimmy;
-                pros::Motor* ptr;
                 int chainlength;
                 int enocderUnitsPerChain;
                 int blockState[3];
-                int chainPositioning[7];
-                int chainState = 0;
+                int chainPositioning[6];
+                int chainState = 9;
 
             public:
 
@@ -39,40 +38,55 @@ namespace pros {
                     chainlength = ichainLength;
                     enocderUnitsPerChain = 900/sprocketCount;
 
-                    for(int i = 0; i>=7; i++){
-                        chainPositioning[i] = i*(chainlength/7);
-                    }
+                    int chainState = 9;
+
                     
+                    chainPositioning[0] = 9;
+                    chainPositioning[1] = 18;
+                    chainPositioning[2] = 27;
+                    chainPositioning[3] = 36;
+                    chainPositioning[4] = 45;
+                    chainPositioning[5] = 54;
+
+                    blockState[0] = 0;
+                    blockState[1] = 0;
+                    blockState[2] = 0;
+
                 }
                 
+
+
                 /**
-                 * Moves the chain a number of chain lengths at the given velocity.
                  * 
-                 * \param chainNumber
-                 *  Number of chains to move the drive. 
-                 * 
-                 * \param velocity
-                 *  Velocity of motor movement of chain
                  * 
                  */
-                void chainMove(int chainNumber, int velocity){
+                void chainMoveSpecific(int chainNumber, int velocity){
                     
-                    elevatorMotor.move_relative(enocderUnitsPerChain*chainNumber, velocity);
-                    chainState += enocderUnitsPerChain*chainNumber;
+                    int moveNumber;
 
-                    for(int i = 0; i>=7; i++){
-                        chainPositioning[i] += chainNumber;
+                    if((chainNumber-chainState)<0){
+                        moveNumber = chainlength+(chainNumber-chainState);
+                    }else{
+                        moveNumber = chainNumber-chainState;
                     }
 
+                    elevatorMotor.move_relative(double(moveNumber*enocderUnitsPerChain), velocity);
+
+                    chainState = chainNumber;
+
+                }
+
+                int getChainState(){
+                    return chainState;
                 }
 
                 /**
                  * Sets a zero position for the chain state
                  * 
                  * \param modifier
-                 *  Chain state to set to (in encoder units)
+                 *  optioncal: Chain state to set to (in encoder units)
                  */
-                void zero(int modifier){
+                void zero(int modifier = 0){
                     chainState = modifier;
                 }
 
@@ -80,25 +94,54 @@ namespace pros {
                  * holds the nearest tooth to the intake to prepare for loading
                  * 
                  */
-                void hold(){
+                void hold(int velocity){
+                
+                    int nearestTooth = (chainState/9)+1;
+                    if(nearestTooth >=7){
+                        nearestTooth = 1;
+                    }
+                    
+                    chainMoveSpecific(chainPositioning[nearestTooth-1], velocity);
 
+                    if(blockState[1]){
+                        blockState[2] =1;
+                    }
+
+                    if(blockState[0]){
+                        blockState[1] =1;
+                    }
+
+                    blockState[0] = 1;
+                    
                 }
                 
                 /**
                  * holds a specifc tooth to the intake to prepare for loading
+                 * 
+                 *  \param toothNumber;
                  */
-                void hold_specific(int toothNuumber){
+                void hold_specific(int toothNumber, int speed){
+                    
+                    chainMoveSpecific(chainPositioning[toothNumber-1],speed);
 
                 }
 
                 /**
-                 * loads the next blcok into the block elevator
+                 * loads the next block out of the block elevator
                  */
                 void load(){
                     
+
+
                 }
 
-                
+                /**
+                 * loads all blocks out of the block elevator
+                 */
+                void loadAll(){
+                    
+
+                }
 
 
                 
