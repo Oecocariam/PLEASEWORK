@@ -26,6 +26,7 @@ void on_center_button() {
 	std::string fileNamer = "usd/data.txt";
 
 void toggleTeam(){
+	pros::lcd::initialize();
 	std::string teamType;
 	if(team == 2){
 		team = 1;
