@@ -108,6 +108,8 @@ void opcontrol() {
 	pros::Motor shrimp(std::int8_t(13), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 	pros::MotorGroup krill({-11,12}, pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 
+	pros::Distance distance(8);
+
 	pros::Block_Elevator stimpy(shrimp,55,12);
 
 	pros::File_management management(fileNamer, 20);
@@ -135,6 +137,11 @@ void opcontrol() {
 		int state = stimpy.getChainState();
 
 		pros::lcd::set_text(2, std::to_string(state));
+
+		if((distance.get_distance()<40)&&(abs(shrimp.get_current_draw())<1)){
+
+			stimpy.hold(127);
+		};
 
 		if(master.get_digital_new_press(DIGITAL_A)){
 

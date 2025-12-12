@@ -47,7 +47,11 @@ namespace pros {
                     chainPositioning[3] = 36;
                     chainPositioning[4] = 45;
                     chainPositioning[5] = 54;
-                    
+
+                    blockState[0] = 0;
+                    blockState[1] = 0;
+                    blockState[2] = 0;
+
                 }
                 
 
@@ -96,8 +100,19 @@ namespace pros {
                     if(nearestTooth >=7){
                         nearestTooth = 1;
                     }
-
+                    
                     chainMoveSpecific(chainPositioning[nearestTooth-1], velocity);
+
+                    if(blockState[1]){
+                        blockState[2] =1;
+                    }
+
+                    if(blockState[0]){
+                        blockState[1] =1;
+                    }
+
+                    blockState[0] = 1;
+                    
                 }
                 
                 /**
@@ -112,13 +127,21 @@ namespace pros {
                 }
 
                 /**
-                 * loads the next block into the block elevator
+                 * loads the next block out of the block elevator
                  */
                 void load(){
                     
+
+
                 }
 
-                
+                /**
+                 * loads all blocks out of the block elevator
+                 */
+                void loadAll(){
+                    
+
+                }
 
 
                 
