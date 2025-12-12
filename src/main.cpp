@@ -19,7 +19,7 @@ void on_center_button() {
 
 	int fileNumber = 0;
 	
-	std::string fileNamer = "usd/data.txt";
+	char fileNamer[1];
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -35,14 +35,14 @@ void initialize() {
 
 	while(true){
 
-		std::string fileNamer = "usd/data" + std::to_string(fileNumber) + ".txt";
+		std::string fileNamer = "/usd/data" + std::to_string(fileNumber) + ".txt";
 
 		char * arrFileNamer = new char [fileNamer.length()+1];
 		strcpy (arrFileNamer, fileNamer.c_str());
 
 		FILE* SD = fopen(arrFileNamer, "r");	
 
-		if(SD == nullptr){
+		if(SD == NULL){
 			break;
 		}
 		
@@ -106,22 +106,21 @@ void opcontrol() {
 	pros::MotorGroup left_mg({-1, 2, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({-4, 5, 6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor shrimp(std::int8_t(13), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
-	pros::MotorGroup krill({-11,12}, pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
-
-	pros::Distance distance(8);
 
 	pros::Block_Elevator stimpy(shrimp,55,12);
-
 	pros::File_management management(fileNamer, 20);
 	std::string data[8]= {"Time ms", "Motor1","Motor2","Motor3","Motor4","Motor5","Motor6", "Shrimp"};
 
 	while (true) {
+		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
+		    (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
+		    (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
 		 
 		management.write(data);
 
 		// Arcade control scheme
-		int turn = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
-		int dir = master.get_analog(ANALOG_LEFT_X);  // Gets the turn left/right from right joystick
+		int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
+		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
 		left_mg.move(dir - turn);                      // Sets left motor voltage
 		right_mg.move(dir + turn);                     // Sets right motor voltage
 
@@ -132,25 +131,12 @@ void opcontrol() {
 		data[4] = right_mg.get_voltage(0);			   
 		data[5] = right_mg.get_voltage(1);			   
 		data[6] = right_mg.get_voltage(2);
-		data[7] = shrimp.get_voltage();			   
-
-		int state = stimpy.getChainState();
-
-		pros::lcd::set_text(2, std::to_string(state));
-
-		if((distance.get_distance()<40)&&(abs(shrimp.get_current_draw())<1)){
-
-			stimpy.hold(127);
-		};
+		data[6] = shrimp.get_voltage();			   
 
 		if(master.get_digital_new_press(DIGITAL_A)){
 
-			stimpy.hold(127);
-		}
+			stimpy.chainMove(7, 127);
 
-		if(master.get_digital_new_press(DIGITAL_B)){
-
-			krill.move(127);
 		}
  
 		management.write(data);						   // write data to class
