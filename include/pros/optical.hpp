@@ -54,10 +54,13 @@ class Optical : public Device {
 	 * pros::Optical optical(1);
 	 * \endcode
 	 */
-	Optical(const std::uint8_t port);
+	Optical(const std::uint8_t port = 1);
 
 	Optical(const Device& device) : Optical(device.get_port()){};
 
+	void setEqual(pros::Optical replace){
+		_port = replace._port;
+	}
 
 	/**
 	 * Gets all optical sensors.
@@ -96,6 +99,7 @@ class Optical : public Device {
 	 * \endcode
 	 */
 	virtual double get_hue();
+
 
 	/**
 	 * Get the detected color saturation
@@ -441,6 +445,8 @@ class Optical : public Device {
 	 * \endcode
 	 */
 	friend std::ostream& operator<<(std::ostream& os, pros::Optical& optical);
+
+
 
 	private:
 	///@}

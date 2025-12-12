@@ -7,6 +7,10 @@
  * When this callback is fired, it will toggle line 2 of the LCD text between
  * "I was pressed!" and nothing.
  */
+
+
+int team = 1;
+
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -20,6 +24,20 @@ void on_center_button() {
 	int fileNumber = 0;
 	
 	std::string fileNamer = "usd/data.txt";
+
+void toggleTeam(){
+	std::string teamType;
+	if(team == 2){
+		team = 1;
+		teamType = "Blue";
+	}else if(team ==  1){
+		team = 2;
+		teamType = "Red";
+	}
+	
+
+	pros::lcd::set_text(3, teamType);
+}
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -73,7 +91,11 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+
+	pros::lcd::register_btn0_cb(toggleTeam);
+
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -109,8 +131,9 @@ void opcontrol() {
 	pros::MotorGroup krill({-11,12}, pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 
 	pros::Distance distance(8);
+	pros::Optical color(9);
 
-	pros::Block_Elevator stimpy(shrimp,55,12);
+	pros::Block_Elevator stimpy(shrimp, distance, 55,12, team);
 
 	pros::File_management management(fileNamer, 20);
 	std::string data[8]= {"Time ms", "Motor1","Motor2","Motor3","Motor4","Motor5","Motor6", "Shrimp"};
@@ -138,16 +161,36 @@ void opcontrol() {
 
 		pros::lcd::set_text(2, std::to_string(state));
 
-		if((distance.get_distance()<40)&&(abs(shrimp.get_current_draw())<1)){
+		/**
+		 *automatically loads blocks into the block elevator as they are intaked using sensor data, numerical implementation subject to change 
+		 */
+		if((distance.get_distance()<40)&&(abs(shrimp.get_current_draw())<10)){
 
 			stimpy.hold(127);
+
 		};
 
-		if(master.get_digital_new_press(DIGITAL_A)){
+		/** 
+		 * allows the block elevator to be manually loaded even if the automatic load fails, triggers by simulatanious press of A and UP on the controller
+		 */
+		if(master.get_digital_new_press(DIGITAL_A)&&master.get_digital_new_press(DIGITAL_UP)){
 
 			stimpy.hold(127);
+
 		}
 
+		/**
+		 * unloads all of the blocks from the block elevator and onto a scoring 
+		 */
+		if(master.get_digital_new_press(DIGITAL_Y)){
+
+			stimpy.loadAll(127);
+
+		}
+
+		/**
+		 *  
+		 */
 		if(master.get_digital_new_press(DIGITAL_B)){
 
 			krill.move(127);
