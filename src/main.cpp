@@ -131,8 +131,8 @@ void opcontrol() {
 	pros::Motor shrimp(std::int8_t(13), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 	pros::MotorGroup krill({-11,12}, pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 
-	pros::Distance distance(8);
-	pros::Optical color(9);
+	pros::Distance distance(20);
+	pros::Optical color(21);
 
 	pros::Block_Elevator stimpy(shrimp, distance, 55,12, team);
 
@@ -165,7 +165,7 @@ void opcontrol() {
 		/**
 		 *automatically loads blocks into the block elevator as they are intaked using sensor data, numerical implementation subject to change 
 		 */
-		if((distance.get_distance()<40)&&(abs(shrimp.get_current_draw())<10)){
+		if((distance.get_distance()<60)&&(abs(shrimp.get_actual_velocity())<10)){
 
 			stimpy.hold(127);
 

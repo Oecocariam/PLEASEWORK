@@ -64,8 +64,12 @@ namespace pros {
 
 
                 /**
+                 * moves a specific chain to the active position
                  * 
-                 * 
+                 * \param chainNumber
+                 *  number of chain to move to the active position
+                 * \param velocity
+                 *  speed to move motor at
                  */
                 void chainMoveSpecific(int chainNumber, int velocity){
                     
@@ -91,7 +95,7 @@ namespace pros {
                  * Sets a zero position for the chain state
                  * 
                  * \param modifier
-                 *  optioncal: Chain state to set to (in encoder units)
+                 *  optional: Chain state to set to (in encoder units)
                  */
                 void zero(int modifier = 0){
                     chainState = modifier;
@@ -122,9 +126,9 @@ namespace pros {
                         blockState[1][1] = nearestTooth + 1;
                     }
 
-                    if(color.get_hue()>250){
+                    if((color.get_hue()<190)&&(color.get_hue()>140)){
                         blockState[0][0] = 1;
-                    }else if(color.get_hue()<250){
+                    }else if((color.get_hue()<30)&&(color.get_hue()>20)){
                         blockState[0][0] = 2;
                     }else{
                         blockState[0][0] = 3;
