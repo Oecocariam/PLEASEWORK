@@ -21,6 +21,7 @@ pros::Optical color(21);
 
 pros::Block_Elevator stimpy(shrimp, color, 55,12, team);
 
+pros::File_management management("usd/ifYoureSeeingThisSomethingHasGoneWrong.txt", 20);
 
 std::string data[8]= {"Time ms", "Motor1","Motor2","Motor3","Motor4","Motor5","Motor6", "Shrimp"};
 
@@ -28,6 +29,14 @@ double wheelCircumference = 2*3.1415*2;
 double encoderUnitsPerInch = 900/wheelCircumference;
 double botCircumfrance =  3.1415*8;
 double wheelBase = 8;
+
+int state = stimpy.getChainState();
+int startTime = 0;
+
+/**
+ * 
+ * 
+ */
 void driveDistance(double distance, double voltage){
     while((abs(left_mg.get_actual_velocity())>10)||(abs(right_mg.get_actual_velocity()>10))){
         pros::delay(2);
@@ -49,6 +58,30 @@ void turnRadians(double radians, double voltage){
     right_mg.move_relative(-encoderUnitsPerInch*turnDistance, voltage);
 }
 
+
+pros::task_fn_t autonLoop(){
+
+	while(true){
+
+		data[0] = pros::millis() - startTime;
+		data[1] = left_mg.get_voltage(0); 			   
+		data[2] = left_mg.get_voltage(1); 			   
+		data[3] = left_mg.get_voltage(2); 			   
+		data[4] = right_mg.get_voltage(0);			   
+		data[5] = right_mg.get_voltage(1);			   
+		data[6] = right_mg.get_voltage(2);
+		data[7] = shrimp.get_voltage();
+		data[8] = state;
+
+		
+		pros::delay(20);
+
+		management.write(data);
+	}
+
+}
+
+
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -60,8 +93,8 @@ void on_center_button() {
 }
 
 
-	
-	std::string fileNamer = "usd/data.txt";
+
+std::string fileNamer = "usd/data.txt";
 
 void toggleTeam(){
 	pros::lcd::initialize();
@@ -134,6 +167,8 @@ void competition_initialize() {
 void autonomous() {
 
 	int fileNumber = 0;
+	startTime = pros::millis();
+
 
 	while(true){
 
@@ -155,6 +190,8 @@ void autonomous() {
 
 	pros::File_management management(fileNamer, 20);
 
+	pros::Task autonLoopTask(autonLoop, (void*)"tod", (uint32_t)TASK_PRIORITY_DEFAULT, (uint16_t)TASK_STACK_DEPTH_DEFAULT, (const char*)"Auton Loop");
+
 
 }
 
@@ -174,6 +211,7 @@ void autonomous() {
 void opcontrol() {
 
 	int fileNumber = 0;
+	startTime = pros::millis();
 
 	while(true){
 
@@ -204,16 +242,20 @@ void opcontrol() {
 		left_mg.move(dir - turn);                      // Sets left motor voltage
 		right_mg.move(dir + turn);                     // Sets right motor voltage
 
-		data[0] = pros::millis();
-		data[1] = left_mg.get_voltage(0); 			   
-		data[2] = left_mg.get_voltage(1); 			   
-		data[3] = left_mg.get_voltage(2); 			   
-		data[4] = right_mg.get_voltage(0);			   
-		data[5] = right_mg.get_voltage(1);			   
-		data[6] = right_mg.get_voltage(2);
-		data[7] = shrimp.get_voltage();			   
-
 		int state = stimpy.getChainState();
+
+		data[0] = pros::millis() - startTime;
+		data[1] = left_mg.get_voltage(0); 
+		data[2] = left_mg.get_voltage(1); 
+		data[3] = left_mg.get_voltage(2); 
+		data[4] = right_mg.get_voltage(0);
+		data[5] = right_mg.get_voltage(1);
+		data[6] = right_mg.get_voltage(2)
+		data[7] = shrimp.get_voltage();
+		data[8] = state;
+					   
+
+		
 
 		pros::lcd::set_text(2, std::to_string(state));
 
@@ -255,5 +297,6 @@ void opcontrol() {
 		management.write(data);						   // write data to class
 
 		pros::delay(20);                               // Run for 20 ms then update
+		
 	}
 }
