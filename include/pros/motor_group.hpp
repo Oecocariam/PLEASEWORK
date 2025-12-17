@@ -110,7 +110,7 @@ class MotorGroup : public virtual AbstractMotor {
 	 * }
 	 * \endcode
 	 */
-	MotorGroup(const std::vector<std::int8_t>& ports, const pros::v5::MotorGears gearset = pros::v5::MotorGears::invalid,
+	MotorGroup(const std::vector<std::int8_t>& ports = {1,2,3}, const pros::v5::MotorGears gearset = pros::v5::MotorGears::invalid,
 	           const pros::v5::MotorUnits encoder_units = pros::v5::MotorUnits::invalid);
 
 	/**
@@ -2409,6 +2409,10 @@ class MotorGroup : public virtual AbstractMotor {
 	 *
 	 */
 	void erase_port(std::int8_t port);
+
+	void setEqual(pros::MotorGroup &replace){
+		_ports = replace.get_port_all();
+	}
 
 	///@}
 	private:
