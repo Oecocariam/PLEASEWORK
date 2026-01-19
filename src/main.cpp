@@ -59,7 +59,7 @@ void turnRadians(double radians, double voltage){
 }
 
 
-pros::task_fn_t autonLoop(){
+void autonLoop(void* jim){
 
 	while(true){
 
@@ -250,7 +250,7 @@ void opcontrol() {
 		data[3] = left_mg.get_voltage(2); 
 		data[4] = right_mg.get_voltage(0);
 		data[5] = right_mg.get_voltage(1);
-		data[6] = right_mg.get_voltage(2)
+		data[6] = right_mg.get_voltage(2);
 		data[7] = shrimp.get_voltage();
 		data[8] = state;
 					   
