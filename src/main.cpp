@@ -16,6 +16,12 @@ pros::MotorGroup right_mg({-4, 5, 6});  // Creates a motor group with forwards p
 pros::Motor shrimp(std::int8_t(13), pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 pros::MotorGroup krill({-11,12}, pros::v5::MotorGears::green, pros::v5::MotorUnits::counts);
 
+pros::ADIDigitalOut MLCI1 ('A');
+pros::ADIDigitalOut MLCI2 ('B');
+bool piston = true;
+
+
+
 pros::Distance intakeDistance(20);
 pros::Optical color(21);
 
@@ -30,9 +36,37 @@ double encoderUnitsPerInch = 900/wheelCircumference;
 double botCircumfrance =  3.1415*8;
 double wheelBase = 8;
 
+int intakePower = 0;
 int state = stimpy.getChainState();
 int startTime = 0;
+/**
+ * hold the autonomous scripts
+ * 
+ */
+char autonCommands[12][50][2] = {
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+};
 
+
+double autonDoubles[256] = {
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+};
+int selectedAuton = 1;
 /**
  * 
  * 
@@ -44,6 +78,41 @@ void driveDistance(double distance, double voltage){
     left_mg.move_relative(encoderUnitsPerInch*distance, voltage);
     right_mg.move_relative(encoderUnitsPerInch*distance, voltage);
 }
+
+void powerIntake(double voltage){
+
+	if(voltage>0){
+		if(intakePower == 1){
+			krill.brake();
+
+			intakePower = 0;
+		}else{
+			krill.move(voltage);
+			intakePower = 1;
+		}
+	}
+
+	if(voltage<0){
+		if(intakePower == -1){
+			krill.brake();
+
+			intakePower = 0;
+		}else{
+			krill.move(voltage);
+			intakePower = -1;
+		}
+	}
+
+};
+
+void toggleMLCI(){
+
+	MLCI1.set_value(!piston);
+	MLCI1.set_value(!piston);
+
+	piston = !piston;
+};
+
 
 /**
  * 
@@ -58,6 +127,85 @@ void turnRadians(double radians, double voltage){
     right_mg.move_relative(-encoderUnitsPerInch*turnDistance, voltage);
 }
 
+/**
+ * manages which commands are being run from autonCommands during the autonomous period.
+ */
+void autonManager(){
+	int commandNumber = 0;
+	double setVoltage = 127;
+	double commandData = 0;
+	
+	while(true/*temp*/){
+
+		if (commandData == 0){
+			commandData = autonCommands[selectedAuton][commandNumber][1];
+		}
+
+		/**
+		 * This is the core command of the autonmous script.
+		 * it uses two charecter integers to refer to varius commands in the autonmous library and then run them.
+		 * 
+		 * 
+		 */
+		switch(autonCommands[selectedAuton][commandNumber][0]){
+
+			case 'D':
+			//drive forward
+			driveDistance(commandData, setVoltage);
+			commandData = 0;
+			break;
+
+			case 'I':
+			//toggle intake power
+			powerIntake(setVoltage);
+			commandData = 0;
+			break;
+
+			case 'E':
+			//toggle inverted intake power
+			powerIntake(-setVoltage);
+			commandData = 0;
+			break;
+
+			case 'S':
+			//'Score' using the block elvator
+			stimpy.loadAll(setVoltage); //temp for implementation of specific number load
+			commandData = 0;
+			break;
+
+			case 'T':
+			//turn
+			turnRadians(commandData, setVoltage);
+			commandData = 0;
+			break;
+
+			case 'V':
+			//set voltage to feed to future commands
+			setVoltage = commandData;
+			commandData = 0;
+			break;
+
+			case 'M':
+			//toggle MLCI
+			toggleMLCI();
+			commandData = 0;
+			break;
+
+			case 'P':
+			//pull a specifc double for the next command
+			commandData = autonDoubles[(int)commandData];
+			break;
+
+			case 'W'://implementation needed
+			//waits a given amount of time
+			commandData = 0;
+			break;
+
+		}
+		
+
+	}
+};
 
 void autonLoop(void* jim){
 
@@ -123,7 +271,8 @@ void initialize() {
 
 	pros::lcd::register_btn1_cb(on_center_button);
 
-	
+	MLCI1.set_value(piston);
+	MLCI2.set_value(piston);
 
 	
 	
