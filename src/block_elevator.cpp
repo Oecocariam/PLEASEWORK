@@ -13,7 +13,14 @@ namespace pros {
                 std::string jimmy;
                 int chainlength;
                 int enocderUnitsPerChain;
-                int blockState[3][2];
+                /**
+                 * first digit represents position within the block elevator, determine color(value of zero) or tooth position(value of one)
+                 * 
+                 * [block 1 color][block 1 position]
+                 * [block 2 color][block 2 position]
+                 * [block 3 color][block 3 position]
+                 */
+                int blockState[3][2];                   
                 int chainPositioning[6];
                 int chainState = 9;
 
@@ -56,7 +63,7 @@ namespace pros {
                     blockState[0][0] = 0;
                     blockState[1][0] = 0;
                     blockState[2][0] = 0;
-
+                
                     color.set_led_pwm(100);
 
                 }
@@ -103,7 +110,7 @@ namespace pros {
                 }
 
                 /**
-                 * holds the nearest tooth to the intake to prepare for loading and labels blockk with color type, 1 is blue, 2 is red, 3 is error, implementation requires testing of hues
+                 * holds the nearest tooth to the intake to load block and labels block with color type, 1 is blue, 2 is red, 3 is error, implementation requires testing of hues
                  * 
                  */
                 void hold(int velocity){
@@ -151,14 +158,48 @@ namespace pros {
                 }
 
                 /**
-                 * loads the next block out of the block elevator and on to a scoring place
+                 * loads a specified number of blocks out of the block elevator and on to a scoring place
                  */
-                void load(){
+                void load(int blocks, int velocity){
                     
+                    int unloadTooth = (chainState/9)+blocks;
+                    if(unloadTooth >=7){
+                        unloadTooth-=6;
+                    }
                     
+                    chainMoveSpecific(chainPositioning[unloadTooth-1], velocity);
 
-                    
+                    if(blocks>=3){
 
+                        blockState[0][0] = 0;
+                        blockState[1][0] = 0;
+                        blockState[2][0] = 0;
+                        
+                        blockState[0][1] = 0;
+                        blockState[1][1] = 0;
+                        blockState[2][1] = 0;
+                       
+                    }else if(blocks = 2){
+
+                        blockState[0][0] = 0;
+                        blockState[1][0] = 0;
+                        blockState[2][0] = blockState[2][0];
+                        
+                        blockState[0][1] = 0;
+                        blockState[1][1] = 0;
+                        blockState[2][1] = blockState[2][1];
+
+                    }else if(blocks = 1){
+
+                        blockState[0][0] = 0;
+                        blockState[1][0] = blockState[0][0];
+                        blockState[2][0] = blockState[1][0];
+                        
+                        blockState[0][1] = 0;
+                        blockState[1][1] = blockState[0][0];
+                        blockState[2][1] = blockState[1][1];
+
+                    }
                 }
 
                 /**

@@ -259,7 +259,7 @@ void autonManager(void* jimmy){
 
 			case 'S':
 				//'Score' using the block elvator
-				stimpy.loadAll(setVoltage); //temp for implementation of specific number load
+				stimpy.load(commandData, setVoltage);
 				commandData = 0;
 				break;
 
