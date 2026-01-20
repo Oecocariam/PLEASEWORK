@@ -100,6 +100,30 @@ namespace pros {
                 }
 
                 /**
+                 * moves a specific chain to the active position backwards
+                 * 
+                 * \param chainNumber
+                 *  number of chain to move to the active position
+                 * \param velocity
+                 *  speed to move motor at
+                 */
+                void reverseChainMoveSpecific(int chainNumber, int velocity){
+                    
+                    int moveNumber;
+
+                    if((chainNumber-chainState)<0){
+                        moveNumber = chainNumber-chainState;
+                    }else{
+                        moveNumber = -(chainlength-(chainNumber-chainState));
+                    }
+
+                    elevatorMotor.move_relative(double(moveNumber*enocderUnitsPerChain), velocity);
+
+                    chainState = chainNumber;
+
+                }
+
+                /**
                  * Sets a zero position for the chain state
                  * 
                  * \param modifier
@@ -159,6 +183,51 @@ namespace pros {
 
                 /**
                  * loads a specified number of blocks out of the block elevator and on to a scoring place
+                 */
+                void load(int blocks, int velocity){
+                    
+                    int unloadTooth = (chainState/9)+blocks;
+                    if(unloadTooth >=7){
+                        unloadTooth-=6;
+                    }
+                    
+                    chainMoveSpecific(chainPositioning[unloadTooth-1], velocity);
+
+                    if(blocks>=3){
+
+                        blockState[0][0] = 0;
+                        blockState[1][0] = 0;
+                        blockState[2][0] = 0;
+                        
+                        blockState[0][1] = 0;
+                        blockState[1][1] = 0;
+                        blockState[2][1] = 0;
+                       
+                    }else if(blocks = 2){
+
+                        blockState[0][0] = 0;
+                        blockState[1][0] = 0;
+                        blockState[2][0] = blockState[2][0];
+                        
+                        blockState[0][1] = 0;
+                        blockState[1][1] = 0;
+                        blockState[2][1] = blockState[2][1];
+
+                    }else if(blocks = 1){
+
+                        blockState[0][0] = 0;
+                        blockState[1][0] = blockState[0][0];
+                        blockState[2][0] = blockState[1][0];
+                        
+                        blockState[0][1] = 0;
+                        blockState[1][1] = blockState[0][0];
+                        blockState[2][1] = blockState[1][1];
+
+                    }
+                }
+
+                /**
+                 * unloads a specified number of blocks out of the block elevator and on to a scoring place
                  */
                 void load(int blocks, int velocity){
                     
