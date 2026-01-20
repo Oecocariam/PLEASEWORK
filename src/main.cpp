@@ -231,9 +231,9 @@ void autonManager(void* jimmy){
 				commandData = autonDoubles[(int)commandData];
 				break;
 
-			case 'W'://implementation needed
+			case 'W':
 				//waits a given amount of time
-					
+				pros::delay(commandData);
 				commandData = 0;
 			break;
 
