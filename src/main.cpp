@@ -67,6 +67,21 @@ double autonDoubles[256] = {
 	0,0,0,0,0,0,0,0
 };
 
+std::string autonTitles[12] = {
+	"Red, Left priority, nonqualifying, solo",
+	"Red, Left priority, qualifying, solo",
+	"Red, Left priority, team",
+	"Red, Right priority, nonqualifying, solo",
+	"Red, Right priority, qualifying, solo",
+	"Red, Right priority, team",
+	"Blue, Left priority, nonqualifying, solo",
+	"Blue, Left priority, qualifying, solo",
+	"Blue, Left priority, tean",
+	"Blue, Right priority, nonqualifying, solo",
+	"Blue, Right priority, qualifying, solo",
+	"Blue, Right priority, team",
+};
+
 int selectedAuton = 1;
 
 
@@ -354,14 +369,43 @@ void autonLoop(void* jim){
 }
 
 
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
+
+void incrementAutonSelection(){
+
+
+	selectedAuton -=team*6;
+	selectedAuton += 1;
+	
+
+	if(selectedAuton > 5){
+
+		selectedAuton = 0;
+
 	}
+
+	selectedAuton +=team*6;
+
+	pros::lcd::set_text(4, autonTitles[selectedAuton]);
+
+}
+
+void decrementAutonSelection(){
+
+	selectedAuton -=team*6;
+	selectedAuton -= 1;
+	
+
+	if(selectedAuton < 0){
+
+		selectedAuton = 5;
+
+	}
+
+	selectedAuton +=team*6;
+
+	pros::lcd::set_text(4, autonTitles[selectedAuton]);
+
+
 }
 
 
@@ -369,7 +413,7 @@ void on_center_button() {
 std::string fileNamer = "usd/data.txt";
 
 void toggleTeam(){
-	pros::lcd::initialize();
+	
 	std::string teamType;
 	if(team == 2){
 		team = 1;
@@ -381,6 +425,7 @@ void toggleTeam(){
 	
 
 	pros::lcd::set_text(3, teamType);
+	pros::lcd::set_text(4, autonTitles[selectedAuton]);
 }
 
 /**
@@ -393,7 +438,9 @@ void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
 
-	pros::lcd::register_btn1_cb(on_center_button);
+	pros::lcd::register_btn1_cb(toggleTeam);
+	pros::lcd::register_btn2_cb(incrementAutonSelection);
+	pros::lcd::register_btn0_cb(decrementAutonSelection);
 
 	MLCI1.set_value(piston);
 	MLCI2.set_value(piston);
