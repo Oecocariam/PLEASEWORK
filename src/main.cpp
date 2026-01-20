@@ -257,6 +257,13 @@ void autonManager(void* jimmy){
 				commandData = 0;
 				break;
 
+			case 'L':
+				//unload a specified blocks onto the low center goal
+				powerIntake(-setVoltage);
+				stimpy.unLoad(commandData, setVoltage);
+				commandData = 0;
+				break;
+
 			case 'S':
 				//'Score' using the block elvator
 				stimpy.load(commandData, setVoltage);

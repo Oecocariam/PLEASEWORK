@@ -207,11 +207,11 @@ namespace pros {
 
                         blockState[0][0] = 0;
                         blockState[1][0] = 0;
-                        blockState[2][0] = blockState[2][0];
+                        blockState[2][0] = blockState[0][0];
                         
                         blockState[0][1] = 0;
                         blockState[1][1] = 0;
-                        blockState[2][1] = blockState[2][1];
+                        blockState[2][1] = blockState[0][1];
 
                     }else if(blocks = 1){
 
@@ -229,14 +229,14 @@ namespace pros {
                 /**
                  * unloads a specified number of blocks out of the block elevator and on to a scoring place
                  */
-                void load(int blocks, int velocity){
+                void unLoad(int blocks, int velocity){
                     
-                    int unloadTooth = (chainState/9)+blocks;
-                    if(unloadTooth >=7){
-                        unloadTooth-=6;
+                    int unloadTooth = (chainState/9)-blocks;
+                    if(unloadTooth <=0){
+                        unloadTooth+=6;
                     }
                     
-                    chainMoveSpecific(chainPositioning[unloadTooth-1], velocity);
+                    reverseChainMoveSpecific(chainPositioning[unloadTooth-1], velocity);
 
                     if(blocks>=3){
 
@@ -250,23 +250,23 @@ namespace pros {
                        
                     }else if(blocks = 2){
 
-                        blockState[0][0] = 0;
+                        blockState[0][0] = blockState[2][0];
                         blockState[1][0] = 0;
-                        blockState[2][0] = blockState[2][0];
+                        blockState[2][0] = 0;
                         
-                        blockState[0][1] = 0;
+                        blockState[0][1] = blockState[2][1];
                         blockState[1][1] = 0;
-                        blockState[2][1] = blockState[2][1];
+                        blockState[2][1] = 0;
 
                     }else if(blocks = 1){
 
-                        blockState[0][0] = 0;
-                        blockState[1][0] = blockState[0][0];
-                        blockState[2][0] = blockState[1][0];
+                        blockState[0][0] = blockState[1][0];
+                        blockState[1][0] = blockState[2][1];
+                        blockState[2][0] = 0;
                         
-                        blockState[0][1] = 0;
-                        blockState[1][1] = blockState[0][0];
-                        blockState[2][1] = blockState[1][1];
+                        blockState[0][1] = blockState[1][1];
+                        blockState[1][1] = blockState[2][1];
+                        blockState[2][1] = 0;
 
                     }
                 }
