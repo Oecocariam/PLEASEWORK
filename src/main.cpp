@@ -248,6 +248,17 @@ void autonManager(void* jimmy){
 					}
 
 				}
+				break;
+
+			case 0:
+				//stops the progression of the autonmous script and brakes driveTrain Motors
+				left_mg.brake();
+				right_mg.brake();
+				while(true){
+					pros::delay(1000);
+				}
+				break;
+				
 
 		}
 		
