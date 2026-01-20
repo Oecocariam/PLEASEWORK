@@ -64,11 +64,53 @@ double autonDoubles[256] = {
 	0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0
 };
 
 int selectedAuton = 1;
 
+
+/**
+ *The robot drives along an arc of a given radius and arcAngle
+ * 
+ * \param radius
+ * 	Radius of the arc Driven in inches
+ * 
+ * \param arcAngle
+ * 	angle of the arc traveld
+ * 
+ * \param voltage
+ * 	voltage to spin the motors out.
+ * 
+ */
+void driveArc(double radius, double arcAngle, double voltage){
+
+	double arcLength;
+	double leftArcLength;
+	double rightArcLength;
+
+	if(arcAngle>0){
+	
+		arcLength = arcAngle*radius;
+		leftArcLength = arcAngle*(radius-(.5*wheelBase));
+		rightArcLength = arcAngle*(radius+(.5*wheelBase));
+
+	}else{
+
+		arcLength = arcAngle*radius;
+		leftArcLength = arcAngle*(radius+(.5*wheelBase));
+		rightArcLength = arcAngle*(radius-(.5*wheelBase));
+
+	}
+
+	double leftRatio = leftArcLength/arcLength;
+	double rightRatio = rightArcLength/arcLength;
+	
+
+	left_mg.move_relative(encoderUnitsPerInch*leftArcLength, leftRatio*voltage);
+    right_mg.move_relative(encoderUnitsPerInch*rightArcLength, rightRatio*voltage);		
+
+}
 
 /**
  * 
@@ -168,6 +210,7 @@ void turnRadians(double radians, double voltage){
 void autonManager(void* jimmy){
 
 	double setVoltage = 127;
+	double setAngle = 3.1415923;
 	double commandData = 0;
 	
 	for(int commandNumber = 0; commandNumber >= 50; commandNumber++){
@@ -190,6 +233,18 @@ void autonManager(void* jimmy){
 				commandData = 0;
 				break;
 
+			case 'R':
+				//drive along an arc
+				driveArc(commandData, setAngle, setVoltage);
+				commandData = 0;
+				break;
+			
+			case 'A':
+				//angle for the 'R' command
+				setAngle = commandData;
+				commandData = 0;
+				break;
+ 
 			case 'I':
 				//toggle intake power
 				powerIntake(setVoltage);
